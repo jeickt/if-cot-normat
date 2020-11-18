@@ -76,39 +76,63 @@ def destinarVagas(ordem, curso):
     ordem.sort(key=lambda cota: cota.peso, reverse=True)
     vagas = int(input(f'Qual é o total de vagas para a chamada do curso {curso[1]} - {curso[0]}? '))
 
-    if vagas <= 16:
-        sequencia = [1, 9, 11, 5, 10, 7, 8, 3, 4, 6, 2]
-        for i in range(11):
-            for j in range(11):
-                if vagas > 0 and sequencia[i] == ordem[j].cota:
-                    ordem[j].vagas += 1
-                    vagas -= 1
-        if vagas > 0:
-            ordem[10].vagas += vagas
+    if vagas < 1:
+        raise ValueError("Número de vagas inválidas")
+    elif vagas == 1:
+        ordem[10].vagas += 1
     else:
-        vagasPublicas = math.ceil(vagas/2)
-        vagasUniversais = math.floor(vagas/2)
-        for i in range(8, 11):
-            ordem[i].vagas = math.floor(vagasUniversais * ordem[i].vagas_perc*2)
-            vagasUniversais -= ordem[i].vagas
-        for i in range(8, 11):
-            if vagasUniversais > 0:
-                ordem[i].vagas += 1
-                vagasUniversais -= 1
-        for i in range(8):
-            ordem[i].vagas = math.floor(vagasPublicas * ordem[i].vagas_perc*2) if math.floor(vagasPublicas * ordem[i].vagas_perc*2) > 0 else 1
-            vagasPublicas -= ordem[i].vagas
-        if vagasPublicas > 0:
-            for i in range(8):
-                if vagasPublicas > 0:
+        vagasPublicas = math.ceil(vagas / 2)
+        vagasUniversais = math.floor(vagas / 2)
+
+        if vagasUniversais <= 3:
+            ordem[10].vagas += 1
+            vagasUniversais -= 1
+            for i in range(8, 10, 1):
+               if vagasUniversais > 0:
                     ordem[i].vagas += 1
-                    vagasPublicas -= 1
-        if vagasPublicas < 0:
-            for i in range(7, -1, -1):
-                if vagasPublicas < 0:
-                    if ordem[i].vagas > 1:
+                    vagasUniversais -= 1
+        else:
+            for i in range(8, 11):
+                ordem[i].vagas = math.floor(vagasUniversais * ordem[i].vagas_perc * 2) if math.floor(vagasUniversais * ordem[i].vagas_perc*2) > 0 else 1
+            for i in range(8, 11):
+                vagasUniversais -= ordem[i].vagas
+            if vagasUniversais > 0:
+                for i in range(8, 11):
+                    if vagasUniversais > 0:
+                        ordem[i].vagas += 1
+                        vagasUniversais -= 1
+            if vagasUniversais < 0:
+                for i in range(10, 7, -1):
+                    if vagasUniversais < 0:
                         ordem[i].vagas -= 1
-                        vagasPublicas += 1
+                        vagasUniversais += 1
+
+        if vagasPublicas <= 8:
+            sequencia = [9, 5, 7, 8, 3, 4, 6, 2]
+            for i in range(8):
+                for j in range(8):
+                    if vagasPublicas > 0 and sequencia[i] == ordem[j].cota:
+                        ordem[j].vagas += 1
+                        vagasPublicas -= 1
+        else:
+            for i in range(8):
+                ordem[i].vagas = math.floor(vagasPublicas * ordem[i].vagas_perc*2) if math.floor(vagasPublicas * ordem[i].vagas_perc*2) > 0 else 1
+            for i in range(8):
+                vagasPublicas -= ordem[i].vagas
+            if vagasPublicas > 0:
+                for i in range(8):
+                    if vagasPublicas > 0:
+                        ordem[i].vagas += 1
+                        vagasPublicas -= 1
+            if vagasPublicas < 0:
+                for i in range(7, -1, -1):
+                    if vagasPublicas < 0:
+                        if ordem[i].vagas > 1:
+                            ordem[i].vagas -= 1
+                            vagasPublicas += 1
+    for i in range(11):
+        print(str(ordem[i].cota) + " " + str(ordem[i].vagas) + " - ", end='')
+    print()
     return ordem
 
 
