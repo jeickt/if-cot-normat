@@ -28,3 +28,19 @@ class Cota:
         self.vagas_perc = vagas_perc
         self.peso = peso
         self.vagas = 0
+
+    def __str__(self):
+        return [self.cota, self.vagas]
+
+class Curso:
+    def __init__(self, nome):
+        self.nome = nome
+        self.vagas = []
+
+class CandChamada:
+    def __init__(self, codigo, nome, posicao, matricula, chamada):
+        self.codigo = codigo
+        self.nome = nome
+        self.posicao = posicao
+        self.matricula = matricula
+        self.chamada = chamada
