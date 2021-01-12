@@ -9,8 +9,6 @@ class Candidato:
         self.cotas = cotas
         self.pontuacao = pontuacao if (self.nivel == "superior") else pontuacao * 2.5
         self.posicao = posicao
-        self.matricula = None
-        self.chamada = 0
 
     def __str__(self):
         return self.codigo + "," + self.nome + "," + self.inscricao
@@ -37,10 +35,26 @@ class Curso:
         self.nome = nome
         self.vagas = []
 
-class CandChamada:
-    def __init__(self, codigo, nome, posicao, matricula, chamada):
+class CandControle:
+    def __init__(self, codigo, nome, inscricao, posicao, valido, matricula, chamada, ausencia, descPPI, descRI, descEP, descPCD):
         self.codigo = codigo
         self.nome = nome
+        self.inscricao = inscricao
         self.posicao = posicao
+        self.valido = valido
         self.matricula = matricula
         self.chamada = chamada
+        self.ausencia = ausencia
+        self.descPPI = descPPI
+        self.descRI = descRI
+        self.descEP = descEP
+        self.descPCD = descPCD
+
+class CandResumido:
+    def __init__(self, codigo, nome, inscricao, tipoVaga, chamada, valido):
+        self.codigo = codigo
+        self.nome = nome
+        self.inscricao = inscricao
+        self.tipoVaga = tipoVaga
+        self.chamada = chamada
+        self.valido = valido

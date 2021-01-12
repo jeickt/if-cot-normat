@@ -21,9 +21,10 @@ def listarCandidatos():
         for planilha in listaCandidatos:
             for linha in planilha:
                 if (len(linha) > 1):
-                    candidatos.append(Candidato(linha[5].value, linha[4].value, str(linha[2].value), str(linha[1].value),
-                                                str(linha[3].value), linha[6].value, ajusteCotas(int(linha[6].value)),
-                                                float(linha[12].value), int(linha[13].value)))
+                    candidatos.append(Candidato(linha[5].value, linha[4].value, str(linha[2].value),
+                                                str(linha[1].value), str(linha[3].value), linha[6].value,
+                                                ajusteCotas(int(linha[6].value)), float(linha[12].value),
+                                                int(linha[13].value)))
     return candidatos
 
 
@@ -76,16 +77,13 @@ def fazerListasChamada(curso, candidatos, ordem):
     onzeListas = []
     for i in range(1, 12, 1):
         onzeListas.append(listasParaCotas(curso, candidatos, i))
-    data = []
-    for i in range(len(onzeListas)):
-        dataCota = []
-        for j in range(len(onzeListas[i])):
-            dataCota.append([onzeListas[i][j].codigo, onzeListas[i][j].nome, onzeListas[i][j].inscricao,
-                        onzeListas[i][j].posicao, onzeListas[i][j].matricula, onzeListas[i][j].chamada])
-        data.append(dataCota)
+    dataCota1 = []
+    for i in range(len(onzeListas[0])):
+        dataCota1.append([onzeListas[0][i].codigo, onzeListas[0][i].nome, onzeListas[0][i].inscricao,
+                          onzeListas[0][i].posicao, "SIM", None, 0, None, None, None, None, None])
 
-    df = pd.DataFrame(data[0], columns=['Código', 'Nome', 'Inscrição', 'Posição', 'Matrícula', 'Chamada'])
-
+    df = pd.DataFrame(dataCota1, columns=['Código', 'Nome', 'Inscrição', 'Posição', 'Valido', 'Matrícula', 'Chamada',
+                                        'Não Compareceu', 'desc PPI', 'desc RI', 'desc EP', 'desc PCD'])
     df.to_excel(f'C:\\temp2\\{curso.nome[0]}-{curso.nome[1]}.xlsx', sheet_name=f'Cota-{1}', index=False)
 
     path = f'C:\\temp2\\{curso.nome[0]}-{curso.nome[1]}.xlsx'
@@ -93,17 +91,17 @@ def fazerListasChamada(curso, candidatos, ordem):
     writer.book = load_workbook(path)
 
     for i in range(1, 11):
-        data = []
+        dataOutrasCotas = []
         for j in range(len(onzeListas[i])):
-            data.append([onzeListas[i][j].codigo, onzeListas[i][j].nome, onzeListas[i][j].inscricao,
-                         onzeListas[i][j].posicao, onzeListas[i][j].matricula, onzeListas[i][j].chamada])
-        df = pd.DataFrame(data, columns=['Código', 'Nome', 'Inscrição', 'Posição', 'Matrícula', 'Chamada'])
+            dataOutrasCotas.append([onzeListas[i][j].codigo, onzeListas[i][j].nome, onzeListas[i][j].inscricao,
+                                    None, 0, "SIM"])
+        df = pd.DataFrame(dataOutrasCotas, columns=['Código', 'Nome', 'Inscrição', 'Tipo da Vaga', 'Chamada', 'Válido'])
         df.to_excel(writer, sheet_name=f'Cota-{i+1}', index=False)
 
-    data = []
+    dataVagas = []
     for i in range(11):
-        data.append([curso.vagas[i].cota, curso.vagas[i].vagas])
-    df = pd.DataFrame(data, columns=['Cota', 'Vagas'])
+        dataVagas.append([curso.vagas[i].cota, curso.vagas[i].vagas, 0, 0])
+    df = pd.DataFrame(dataVagas, columns=['Cota', 'VagasCh1', 'VagasCh2', 'VagasCh3'])
     df.to_excel(writer, sheet_name=f'Vagas', index=False)
 
     writer.save()
@@ -131,7 +129,8 @@ def destinarVagas(ordem, curso):
                     vagasUniversais -= 1
         else:
             for i in range(8, 11):
-                ordem[i].vagas = math.floor(vagasUniversais * ordem[i].vagas_perc * 2) if math.floor(vagasUniversais * ordem[i].vagas_perc*2) > 0 else 1
+                ordem[i].vagas = math.floor(vagasUniversais * ordem[i].vagas_perc * 2) \
+                    if math.floor(vagasUniversais * ordem[i].vagas_perc*2) > 0 else 1
             for i in range(8, 11):
                 vagasUniversais -= ordem[i].vagas
             if vagasUniversais > 0:
@@ -154,7 +153,8 @@ def destinarVagas(ordem, curso):
                         vagasPublicas -= 1
         else:
             for i in range(8):
-                ordem[i].vagas = math.floor(vagasPublicas * ordem[i].vagas_perc*2) if math.floor(vagasPublicas * ordem[i].vagas_perc*2) > 0 else 1
+                ordem[i].vagas = math.floor(vagasPublicas * ordem[i].vagas_perc*2) \
+                    if math.floor(vagasPublicas * ordem[i].vagas_perc*2) > 0 else 1
             for i in range(8):
                 vagasPublicas -= ordem[i].vagas
             if vagasPublicas > 0:
