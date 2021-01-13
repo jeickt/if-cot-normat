@@ -1,6 +1,7 @@
 import FuncoesIniciais as fi
 import FuncoesPrimeiraChamada as fst
 import FuncoesSegundaChamada as snd
+import FuncoesTerceiraChamada as trd
 
 
 def main():
@@ -35,8 +36,12 @@ def main():
         snd.consolidarConferenciaPrincipal()
 
     if opcao == 3:
-        # trd.recuperarListasIniciais()
-        pass
+        trd.recuperarListasIniciais()
+        trd.verificarDesclassificacoesEmCotas()
+        for curso in trd.listasCursos:
+            trd.montarListaTerceiraChamada(curso)
+        trd.fazerArquivosDeChamada()
+        trd.consolidarConferenciaPrincipal()
 
     if opcao == 4:
         pass
