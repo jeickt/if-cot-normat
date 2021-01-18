@@ -22,11 +22,15 @@ def recuperarListasIniciais():
             verificador = True
             count = 2
             while verificador:
-                if ws[f'A{count}'].value == None:
+                if not ws[f'A{count}'].value:
                     verificador = False
                 else:
-                    listaCota.append(CandResumido(ws[f'A{count}'].value, ws[f'B{count}'].value, ws[f'C{count}'].value,
-                                                 None, 0, "SIM"))
+                    if i == 1:
+                        listaCota.append(CandResumido(ws[f'A{count}'].value, ws[f'B{count}'].value,
+                                                      ws[f'C{count}'].value, None, 0, ws[f'E{count}'].value))
+                    else:
+                        listaCota.append(CandResumido(ws[f'A{count}'].value, ws[f'B{count}'].value,
+                                                      ws[f'C{count}'].value, None, 0, ws[f'D{count}'].value))
                     count += 1
             onzeListas.append(listaCota)
 
@@ -57,7 +61,8 @@ def montarListaPrimeiraChamada(curso):
 
     # Remanejamento de vagas
     tipoVaga = 1
-    while curso[1][-1].chamada != 1 and any(vagas[1] != 0 for vagas in curso[12]):
+    while any(cand.valido == "SIM" and cand.chamada != 1 for cand in curso[1]) and \
+            any(vagas[1] != 0 for vagas in curso[12]):
         procurandoNovoNomeChamada = True
         if curso[12][tipoVaga][1] > 0:
             for i in range(tipoVaga-1, -1, -1):
@@ -83,10 +88,12 @@ def fazerArquivosDeChamada():
     for i in range(len(primeirasChamadas)):
         data = []
         for c in range(len(primeirasChamadas[i])):
-            data.append([primeirasChamadas[i][c].codigo, primeirasChamadas[i][c].nome, primeirasChamadas[i][c].inscricao,
-                         primeirasChamadas[i][c].tipoVaga, primeirasChamadas[i][c].chamada])
+            data.append([primeirasChamadas[i][c].codigo, primeirasChamadas[i][c].nome,
+                         primeirasChamadas[i][c].inscricao, primeirasChamadas[i][c].tipoVaga,
+                         primeirasChamadas[i][c].chamada])
         df = pd.DataFrame(data, columns=['Código', 'Nome', 'Inscrição', 'Tipo da Vaga', 'Chamada'])
-        df.to_excel(f'C:\\temp-PrimeiraChamada\\PC-{listasCursos[i][0].nome[0]}-{listasCursos[i][0].nome[1]}.xlsx', index=False)
+        df.to_excel(f'C:\\temp-PrimeiraChamada\\PC-{listasCursos[i][0].nome[0]}-{listasCursos[i][0].nome[1]}.xlsx',
+                    index=False)
 
 
 def consolidarConferenciaPrincipal():

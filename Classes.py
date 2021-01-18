@@ -36,7 +36,7 @@ class Curso:
         self.vagas = []
 
 class CandControle:
-    def __init__(self, codigo, nome, inscricao, posicao, valido, matricula, chamada, ausencia, descPPI, descRI, descEP, descPCD):
+    def __init__(self, codigo, nome, inscricao, posicao, valido, matricula, chamada, ausencia, descRI, descPPI, descEP, descPCD):
         self.codigo = codigo
         self.nome = nome
         self.inscricao = inscricao
@@ -45,8 +45,8 @@ class CandControle:
         self.matricula = matricula
         self.chamada = chamada
         self.ausencia = ausencia
-        self.descPPI = descPPI
         self.descRI = descRI
+        self.descPPI = descPPI
         self.descEP = descEP
         self.descPCD = descPCD
 

@@ -82,8 +82,8 @@ def fazerListasChamada(curso, candidatos, ordem):
         dataCota1.append([onzeListas[0][i].codigo, onzeListas[0][i].nome, onzeListas[0][i].inscricao,
                           onzeListas[0][i].posicao, "SIM", None, 0, None, None, None, None, None])
 
-    df = pd.DataFrame(dataCota1, columns=['Código', 'Nome', 'Inscrição', 'Posição', 'Valido', 'Matrícula', 'Chamada',
-                                        'Não Compareceu', 'desc PPI', 'desc RI', 'desc EP', 'desc PCD'])
+    df = pd.DataFrame(dataCota1, columns=['Código', 'Nome', 'Inscrição', 'Posição', 'Válido', 'Matrícula', 'Chamada',
+                                        'NC/desc RE', 'desc RI', 'desc PPI', 'desc EP', 'desc PCD'])
     df.to_excel(f'C:\\temp2\\{curso.nome[0]}-{curso.nome[1]}.xlsx', sheet_name=f'Cota-{1}', index=False)
 
     path = f'C:\\temp2\\{curso.nome[0]}-{curso.nome[1]}.xlsx'
@@ -93,15 +93,14 @@ def fazerListasChamada(curso, candidatos, ordem):
     for i in range(1, 11):
         dataOutrasCotas = []
         for j in range(len(onzeListas[i])):
-            dataOutrasCotas.append([onzeListas[i][j].codigo, onzeListas[i][j].nome, onzeListas[i][j].inscricao,
-                                    None, 0, "SIM"])
-        df = pd.DataFrame(dataOutrasCotas, columns=['Código', 'Nome', 'Inscrição', 'Tipo da Vaga', 'Chamada', 'Válido'])
+            dataOutrasCotas.append([onzeListas[i][j].codigo, onzeListas[i][j].nome, onzeListas[i][j].inscricao, "SIM"])
+        df = pd.DataFrame(dataOutrasCotas, columns=['Código', 'Nome', 'Inscrição', 'Válido'])
         df.to_excel(writer, sheet_name=f'Cota-{i+1}', index=False)
 
     dataVagas = []
     for i in range(11):
-        dataVagas.append([curso.vagas[i].cota, curso.vagas[i].vagas, 0, 0])
-    df = pd.DataFrame(dataVagas, columns=['Cota', 'VagasCh1', 'VagasCh2', 'VagasCh3'])
+        dataVagas.append([curso.vagas[i].cota, curso.vagas[i].vagas, 0, 0, 0])
+    df = pd.DataFrame(dataVagas, columns=['Cota', 'VagasCh1', 'VagasCh2', 'VagasCh3', 'VagasChPubl'])
     df.to_excel(writer, sheet_name=f'Vagas', index=False)
 
     writer.save()
@@ -110,10 +109,16 @@ def fazerListasChamada(curso, candidatos, ordem):
 
 def destinarVagas(ordem, curso):
     ordem.sort(key=lambda cota: cota.peso, reverse=True)
-    vagas = int(input(f'Qual é o total de vagas para a chamada do curso {curso.nome[1]} - {curso.nome[0]}? '))
+
+    vagas = 0
+    while vagas == 0:
+        try:
+            vagas = int(input(f'Qual é o total de vagas para a chamada do curso {curso.nome[1]} - {curso.nome[0]}? '))
+        except ValueError:
+            print("Informação inválida.")
 
     if vagas < 1:
-        raise ValueError("Número de vagas inválidas")
+        print("Número de vagas inválidas")
     elif vagas == 1:
         ordem[10].vagas += 1
     else:
