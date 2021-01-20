@@ -1,4 +1,5 @@
 class Candidato:
+    # classe para a primeira função de listagem dos candidatos em FuncoesIniciais.
     def __init__(self, codigo, nome, campus, nivel, curso, inscricao, cotas, pontuacao, posicao):
         self.codigo = codigo
         self.nome = nome
@@ -14,13 +15,8 @@ class Candidato:
         return self.codigo + "," + self.nome + "," + self.inscricao
 
 
-class Vulnerabilidade:
-    def __init__(self, fator, pontuacao_media):
-        self.fator = fator
-        self.pontuacao_media = pontuacao_media
-        self.peso = 0
-
 class Cota:
+    # classe para a realização dos ordenamentos em FuncoesIniciais.
     def __init__(self, cota, vagas_perc, peso):
         self.cota = cota
         self.vagas_perc = vagas_perc
@@ -31,12 +27,15 @@ class Cota:
         return [self.cota, self.vagas]
 
 class Curso:
+    # informações básicas do curso
     def __init__(self, nome):
         self.nome = nome
         self.vagas = []
 
 class CandControle:
-    def __init__(self, codigo, nome, inscricao, posicao, valido, matricula, chamada, ausencia, descRI, descPPI, descEP, descPCD):
+    # modelo para o acompanhamento principal dos resultados de cada chamada.
+    def __init__(self, codigo, nome, inscricao, posicao, valido, matricula, chamada, ausencia, descRI, descPPI, descEP,
+                 descPCD):
         self.codigo = codigo
         self.nome = nome
         self.inscricao = inscricao
@@ -51,6 +50,7 @@ class CandControle:
         self.descPCD = descPCD
 
 class CandResumido:
+    # modelo resumido para os candidatos de cotas no acompanhamento principal e na elaboração das chamadas.
     def __init__(self, codigo, nome, inscricao, tipoVaga, chamada, valido):
         self.codigo = codigo
         self.nome = nome

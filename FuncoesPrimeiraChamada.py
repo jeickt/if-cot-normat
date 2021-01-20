@@ -11,6 +11,7 @@ primeirasChamadas = []
 
 
 def recuperarListasIniciais():
+    # recupera o arquivamento de FuncoesIniciais.
     arquivos = os.listdir('C:\\temp2')
     for arq in arquivos:
         nome = re.split(r'[-.]+', arq)
@@ -38,12 +39,14 @@ def recuperarListasIniciais():
         cursoVagas = []
         for i in range(2, 13, 1):
             cursoVagas.append([ws[f'A{i}'].value, ws[f'B{i}'].value])
+            # obtem as vagas existentes no curso.
         onzeListas.append(cursoVagas)
 
         listasCursos.append(onzeListas)
 
 
 def montarListaPrimeiraChamada(curso):
+    # constrói as listas de Primeira Chamada
     chamada = []
 
     # Primeira montagem
@@ -85,6 +88,7 @@ def montarListaPrimeiraChamada(curso):
 
 
 def fazerArquivosDeChamada():
+    # arquiva as listas de Primeira Chamada
     for i in range(len(primeirasChamadas)):
         data = []
         for c in range(len(primeirasChamadas[i])):
@@ -97,6 +101,7 @@ def fazerArquivosDeChamada():
 
 
 def consolidarConferenciaPrincipal():
+    # Salva no controle principal a informação da chamada para cada candidato de Primeira Chamada.
     arquivos = os.listdir('C:\\temp2')
     for i in range(len(arquivos)):
         wb = load_workbook('C:\\temp2\\' + arquivos[i])

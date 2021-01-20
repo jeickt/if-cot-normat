@@ -12,6 +12,7 @@ terceirasChamadas = []
 
 
 def recuperarListasIniciais():
+    # recupera os arquivamento de FuncoesIniciais e da Segunda Chamada.
     arquivos = os.listdir('C:\\temp-SegundaChamada')
     for arq in arquivos:
         segundaChamada = []
@@ -55,9 +56,11 @@ def recuperarListasIniciais():
                             if not ws[f'F{count}'].value:
                                 wsVagas[f'D{sequencia.index(cand.tipoVaga) + 2}'] = \
                                     wsVagas[f'D{sequencia.index(cand.tipoVaga) + 2}'].value + 1
+                                # verifica as vagas que sobraram da chamada anterior.
                             if ws[f'F{count}'].value or ws[f'H{count}'].value:
                                 listaCota[-1].valido = "NAO"
                                 ws[f'E{count}'] = "NAO"
+                                # elimina candidatos que foram matriculados ou completamente desclassificados.
                     else:
                         listaCota.append(CandResumido(ws[f'A{count}'].value, ws[f'B{count}'].value,
                                                       ws[f'C{count}'].value, None, None, ws[f'D{count}'].value))
@@ -68,6 +71,7 @@ def recuperarListasIniciais():
         cursoVagas = []
         for j in range(2, 13, 1):
             cursoVagas.append([wsVagas[f'A{j}'].value, wsVagas[f'D{j}'].value])
+            # obtem as vagas remanescentes no curso.
 
         onzeListas.append(cursoVagas)
 
@@ -76,6 +80,7 @@ def recuperarListasIniciais():
 
 
 def verificarDesclassificacoesEmCotas():
+    # realiza o tratamento das desclassificações ocorridas nas análises de cada tipo de cota.
     arquivos = os.listdir('C:\\temp2')
     for i in range(len(arquivos)):
         wb = load_workbook('C:\\temp2\\' + arquivos[i])
@@ -114,6 +119,7 @@ def verificarDesclassificacoesEmCotas():
 
 
 def montarListaTerceiraChamada(curso):
+    # constrói as listas de Terceira Chamada
     chamada = []
 
     # Primeira montagem
@@ -157,6 +163,7 @@ def montarListaTerceiraChamada(curso):
 
 
 def fazerArquivosDeChamada():
+    # arquiva as listas de Terceira Chamada
     for i in range(len(terceirasChamadas)):
         data = []
         for c in range(len(terceirasChamadas[i])):
@@ -169,6 +176,7 @@ def fazerArquivosDeChamada():
 
 
 def consolidarConferenciaPrincipal():
+    # Salva no controle principal a informação da chamada para cada candidato de Terceira Chamada.
     arquivos = os.listdir('C:\\temp2')
     for i in range(len(arquivos)):
         wb = load_workbook('C:\\temp2\\' + arquivos[i])

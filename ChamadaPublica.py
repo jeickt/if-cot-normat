@@ -12,6 +12,7 @@ chamadasPublicas = []
 
 
 def recuperarListasIniciais():
+    # recupera os arquivamento de FuncoesIniciais e da Terceira Chamada.
     arquivos = os.listdir('C:\\temp-TerceiraChamada')
     for arq in arquivos:
         terceiraChamada = []
@@ -56,9 +57,11 @@ def recuperarListasIniciais():
                             if not ws[f'F{count}'].value:
                                 wsVagas[f'E{sequencia.index(cand.tipoVaga) + 2}'] = \
                                     wsVagas[f'E{sequencia.index(cand.tipoVaga) + 2}'].value + 1
+                                # verifica as vagas que sobraram da chamada anterior.
                             if ws[f'F{count}'].value or ws[f'H{count}'].value:
                                 listaCota[-1].valido = "NAO"
                                 ws[f'E{count}'] = "NAO"
+                                # elimina candidatos que foram matriculados ou completamente desclassificados.
                     else:
                         listaCota.append(CandResumido(ws[f'A{count}'].value, ws[f'B{count}'].value,
                                                       ws[f'C{count}'].value, None, None, ws[f'D{count}'].value))
@@ -69,6 +72,7 @@ def recuperarListasIniciais():
         cursoVagas = []
         for j in range(2, 13, 1):
             cursoVagas.append([wsVagas[f'A{j}'].value, wsVagas[f'E{j}'].value])
+            # obtem as vagas remanescentes no curso.
 
         onzeListas.append(cursoVagas)
 
@@ -77,6 +81,7 @@ def recuperarListasIniciais():
 
 
 def verificarDesclassificacoesEmCotas():
+    # realiza o tratamento das desclassificações ocorridas nas análises de cada tipo de cota.
     arquivos = os.listdir('C:\\temp2')
     for i in range(len(arquivos)):
         wb = load_workbook('C:\\temp2\\' + arquivos[i])
@@ -115,6 +120,7 @@ def verificarDesclassificacoesEmCotas():
 
 
 def inserirListasVazias():
+    # organiza o acompanhamento necessário de cada curso para a Chamada Pública.
     for curso in listasCursos:
         vagasTotais = 0
         for vagas in curso[12]:
@@ -123,6 +129,7 @@ def inserirListasVazias():
 
 
 def comecarChamada():
+    # realiza a chamada pública de modo interativo com o usuário.
     opcao = 0
     while True:
         print("Chamar próximo candidato de qual curso?")
@@ -138,6 +145,7 @@ def comecarChamada():
                 raise ValueError
         except:
             print("Opção inválida.")
+
         if opcao == 311415117:
             break
         elif not (opcao < 0 or opcao > len(listasCursos) - 1):
@@ -155,8 +163,8 @@ def comecarChamada():
                     print("-------------------------------------------------------------------------------------------")
 
 
-
 def chamarCandidato(curso, pos):
+    # retorna o candidato seguinte a ser chamada em determinado curso por excolha do usuário.
     if len(chamadasPublicas[pos][2]) > 0:
         verificarMatricula(pos)
     for i in range(11):
@@ -183,10 +191,11 @@ def chamarCandidato(curso, pos):
                                 return [possivelChamado, ""]
         else:
             tipoVaga += 1
-    return (None, None)
+    return [None, None]
 
 
 def verificarMatricula(pos):
+    # verifica o resultado do chamamento de um candidato.
     candAVerificar = chamadasPublicas[pos][2][-1][0]
     print(f"""O candidato {candAVerificar.nome} realizou a matrícula?
                 Opção 1 - Sim;
@@ -246,6 +255,7 @@ def verificarMatricula(pos):
 
 
 def arquivarChamadaPublica():
+    # arquiva as listas de Chamada Pública
     for i in range(len(chamadasPublicas)):
         data = []
         for c in range(len(chamadasPublicas[i][2])):
@@ -258,6 +268,7 @@ def arquivarChamadaPublica():
 
 
 def consolidarConferenciaPrincipal():
+    # Salva no controle principal a informação da chamada para cada candidato de Chamada Pública.
     arquivos = os.listdir('C:\\temp2')
     for i in range(len(arquivos)):
         wb = load_workbook('C:\\temp2\\' + arquivos[i])

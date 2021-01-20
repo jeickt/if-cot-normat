@@ -12,6 +12,7 @@ percentuaisVagas = [.4, .00966, .03234, .04784, .16016, .00966, .03234, .04784, 
 
 
 def listarCandidatos():
+    # busca todos os arquivos iniciais para o processo seletivo em uma pasta e os organiza em uma lista de candidatos.
     arquivos = os.listdir(('C:\\temp'))
     candidatos = []
     for arq in arquivos:
@@ -29,6 +30,8 @@ def listarCandidatos():
 
 
 def ajusteCotas(cotaInscricao):
+    # a partir da cota de inscrição, se obtem todas as cotas em que o candidato irá concorrer.
+    # neste modelo, inscritos de cotas 2, 3, 6 e 7 seriam pretos e pardos, enquanto 12, 13, 16 e 17 seriam indígenas.
     if cotaInscricao == 2:
         c = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
     elif cotaInscricao == 3:
@@ -63,6 +66,7 @@ def ajusteCotas(cotaInscricao):
 
 
 def ordemChamada():
+    # estabelece a base de ordenamento das classes Cota para os tratamentos futuros, a partir dos pesos.
     ordem = []
     for num in range(11):
         ordem.append(Cota((num+1), percentuaisVagas[num], pesos[num]))
@@ -70,6 +74,7 @@ def ordemChamada():
 
 
 def fazerListasChamada(curso, candidatos, ordem):
+    # cria as listas de chamadas para cada cota, além do controle principal (Cota 1) e as arquiva.
     ordemCham = destinarVagas(ordem, curso)
     ordemCham.sort(key=lambda cota: cota.peso)
     curso.vagas = ordemCham
@@ -108,6 +113,7 @@ def fazerListasChamada(curso, candidatos, ordem):
 
 
 def destinarVagas(ordem, curso):
+    # estabalece a quantidade de vagas por cota, a partir do total de vagas e dos percentuais legais.
     ordem.sort(key=lambda cota: cota.peso, reverse=True)
 
     vagas = 0
@@ -177,6 +183,7 @@ def destinarVagas(ordem, curso):
 
 
 def listasParaCotas(curso, candidatos, cota):
+    # filtra os candidatos correspondentes a cada lista de chamada.
     listaTemp = list(filter(lambda cand: cota in cand.cotas and cand.campus == curso.nome[1] and
                                          cand.curso == curso.nome[0], candidatos))
     listaTemp.sort(key=lambda cand: cand.posicao)
